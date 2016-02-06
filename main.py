@@ -29,6 +29,11 @@ pygame.display.set_caption(gameName)
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 
+score = 0
+high = 0
+realTimeLeft = 15
+timeLeft = realTimeLeft*fps
+
 # Load game graphics
 background = pygame.image.load(os.path.join(imgFolder,'background.jpg')).convert()
 background_rect = background.get_rect()
@@ -44,6 +49,7 @@ player_anim = [player_img_1,player_img_2,player_img_3,player_img_4]
 # Load game0 sounds
 shoot_sound = pygame.mixer.Sound(os.path.join(soundFolder,'Laser_Shoot3.wav'))
 explosion_sound = pygame.mixer.Sound(os.path.join(soundFolder,'Explosion3.wav'))
+timer_sound = pygame.mixer.Sound(os.path.join(soundFolder,'tring.wav'))
 
 # Bg Music
 pygame.mixer.music.load(os.path.join(soundFolder,'spaceranger3.wav'))
@@ -150,22 +156,18 @@ class Bullet(pygame.sprite.Sprite):
 		self.rect.bottom += self.speedy
 		if self.rect.bottom < 0:
 			self.kill()
-		
+player = Player()
+
 def reinit():
+	global score, timeLeft
 	score = 0
+	timeLeft = realTimeLeft * fps
 	for mob in mobs:
 		mob.kill()
 	for i in range(5):
 		m = Mob()
 		all_sprites.add(m)
 		mobs.add(m)
-		score = 0
-		timeLeft = realTimeLeft * fps
-player = Player()
-score = 0
-high = 0
-realTimeLeft = 60
-timeLeft = realTimeLeft*fps
 
 mobs = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
@@ -187,15 +189,17 @@ while not gameEnd:
 	clock.tick(fps);
 	if not gameOver:
 		timeLeft -= 1
-
+	if timeLeft == 0:
+		gameOver = True
+		timer_sound.play()
+		timeLeft = realTimeLeft*fps
 	#Handle Events
 
 	for event in pygame.event.get():
 
 		# Quit event
-		if event.type == pygame.QUIT:
+		if event.type == pygame.QUIT :
 			gameEnd = True
-			pass
 		elif event.type == pygame.MOUSEBUTTONDOWN:
 			if event.button == 1:  # LMB = 1
 				if not gameOver:
@@ -204,9 +208,12 @@ while not gameEnd:
 				if gameOver:
 					gameEnd  = True
 		elif event.type == pygame.KEYDOWN:
+			if event.key in [pygame.K_ESCAPE]:
+				gameEnd = True
 			if event.key == pygame.K_SPACE and gameOver:
-				gameOver = False
 				reinit()
+				gameOver = False
+				
 				
 	# Update
 	all_sprites.update()
@@ -227,7 +234,6 @@ while not gameEnd:
 	
 	if hits:
 		gameOver = True
-		timeLeft = realTimeLeft * fps
 		for hit in hits:
 			m = Mob()
 			all_sprites.add(m)
