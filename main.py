@@ -52,7 +52,7 @@ explosion_sound = pygame.mixer.Sound(os.path.join(soundFolder,'Explosion3.wav'))
 timer_sound = pygame.mixer.Sound(os.path.join(soundFolder,'tring.wav'))
 
 # Bg Music
-pygame.mixer.music.load(os.path.join(soundFolder,'spaceranger3.wav'))
+pygame.mixer.music.load(os.path.join(soundFolder,'Zigzag.ogg'))
 pygame.mixer.music.set_volume(1)
 explosion_sound.set_volume(0.1)
 shoot_sound.set_volume(0.3)
@@ -250,7 +250,7 @@ while not gameEnd:
 
 	# Update display after drawing everything
 	if gameOver:
-		draw_text(gameDisplay, "SPACE to Start, RMB to Quit",20,WIDTH / 2, HEIGHT / 2)
+		draw_text(gameDisplay, "SPACE to Start, Escape to Quit",20,WIDTH / 2, HEIGHT / 2)
 	
 	pygame.display.update()
 	
