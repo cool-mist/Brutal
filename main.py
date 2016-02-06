@@ -14,7 +14,7 @@ gameName = "Brutal"
 WIDTH = 640 
 HEIGHT = 480
 windowSize = (WIDTH,HEIGHT)
-fps = 60
+fps = 120
 
 # Assets folder
 gameFolder = os.path.dirname(__file__)
